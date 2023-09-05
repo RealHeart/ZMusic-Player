@@ -8,6 +8,92 @@
 
 使用 Rust + Rodio 实现的音频播放器 使用 JNI 调用
 
+## 开发
+
+```shell
+git clone https://github.com/RealHeart/ZMusic-Player.git zmusic-player
+cd zmusic-player
+cargo build
+```
+
+## 测试
+
+测试代码: 
+
+```java
+package me.zhenxin.zmusic.music; // 包名不能更改 如需更改请更改 src/lib.rs 内的函数名称
+
+import java.io.File;
+
+public class JniPlayer {
+
+  public JniPlayer() {
+    System.loadLibrary("libzmusic");
+  }
+
+  private native void init();
+
+  private native void load(String url);
+
+  private native void play();
+
+  private native void pause();
+
+  private native void resume();
+
+  private native void stop();
+
+  private native float getVolume();
+
+  private native void setVolume(float volume);
+
+  private native int getStatus();
+
+  public static void main(String[] args) {
+    var url = ""; // 音频链接 支持: mp3, flac, wav, ogg, m4a, mp4, aac等
+    System.out.println("running...");
+    JniPlayer player = new JniPlayer();
+    player.init();
+    System.out.println("initialized.");
+    System.out.println("loading " + url);
+    player.load(url);
+    player.setVolume(0.1f);
+    System.out.println("volume: " + player.getVolume());
+    System.out.println("playing...");
+    player.play();
+    while (true) {
+      try {
+        Thread.sleep(1000);
+        System.out.println("status: " + statusToString(player.getStatus()));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public static String statusToString(int status) {
+    switch (status) {
+      case 0:
+        return "STOPPED";
+      case 1:
+        return "PLAYING";
+      case 2:
+        return "PAUSED";
+      default:
+        return "UNKNOWN";
+    }
+  }
+}
+
+```
+
+运行测试:
+
+```shell
+java -Djava.library.path=target/debug JniPlayer.java # 调试
+java -Djava.library.path=target/release JniPlayer.java # 生产
+```
+
 ## 开源协议
 
 本项目使用 [GPL-3.0](LICENSE) 协议开放源代码
