@@ -13,5 +13,4 @@ rodio = { version = "0.17", default-features = false, features = [
 ] }
 
 [lib]
-name = "libzmusic"
 crate-type = ["cdylib"]

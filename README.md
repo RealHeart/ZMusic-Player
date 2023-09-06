@@ -28,7 +28,7 @@ import java.io.File;
 public class JniPlayer {
 
   public JniPlayer() {
-    System.loadLibrary("libzmusic");
+    System.loadLibrary("zmusic");
   }
 
   private native void init();
